@@ -1,0 +1,27 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Discussion {
+  id: Int!
+  row: Int!
+  tableName: String!
+}
+
+type Mutation {
+  addDiscussion(newDiscussionData: NewDiscussionInput!): Discussion!
+  removeDiscussion(id: Float!): Boolean!
+}
+
+input NewDiscussionInput {
+  row: Int!
+  tableName: String!
+}
+
+type Query {
+  discussion(id: Float!): Discussion!
+}
+
+type Subscription {
+  discussionAdded: Discussion!
+}

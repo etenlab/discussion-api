@@ -33,3 +33,10 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+.yarn
+.DS_Store
+titles
+parsed
+**/scripts2/20220920
+**/scripts2/20220920_1
