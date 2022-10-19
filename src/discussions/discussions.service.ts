@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NewDiscussionInput } from './dto/new-discussion.input';
+import { NewDiscussionInput } from './new-discussion.input';
 import { Discussion } from './discussion.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
