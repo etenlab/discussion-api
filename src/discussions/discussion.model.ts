@@ -10,7 +10,7 @@ export class Discussion {
 
   @Column()
   @Field({ nullable: false })
-  tableName: string;
+  table_name: string;
 
   @Column()
   @Field(type => Int, { nullable: false })
