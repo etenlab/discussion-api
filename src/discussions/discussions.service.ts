@@ -24,10 +24,10 @@ export class DiscussionsService {
     return discussion;
   }
 
-  async findIdByTableRow(_tableName: string, _rowId: number): Promise<Discussion> {
-    const discussion = this.discussionRepository.findOne({ where: { tableName: _tableName, row: _rowId } });
+  async findIdByTableRow(tableName: string, rowId: number): Promise<Discussion> {
+    const discussion = this.discussionRepository.findOne({ where: { table_name: tableName, row: rowId } });
     if (!discussion) {
-      throw new NotFoundException(`Discussion #${_tableName}, #${_rowId} not found`);
+      throw new NotFoundException(`Discussion #${tableName}, #${rowId} not found`);
     }
     return discussion;
   }
