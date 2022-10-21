@@ -65,7 +65,3 @@ type Reaction {
   id: Int!
   user_id: String!
 }
-
-type Subscription {
-  discussionAdded: Discussion!
-}
