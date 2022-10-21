@@ -19,6 +19,18 @@ export class DiscussionsResolver {
     return discussion;
   }
 
+  @Query(returns => [Discussion])
+  async discussions(
+    @Args('table_name') table_name: string,
+    @Args('row') row: number
+  ): Promise<Discussion[]> {
+    const discussions = await this.discussionsService.findByTableRow(table_name, row);
+    if (!discussions) {
+      throw new NotFoundException(`Discussion not found by table#${table_name}, row#${row}`);
+    }
+    return discussions;
+  }
+
   @Mutation(returns => Discussion)
   async addDiscussion(
     @Args('newDiscussionData') newDiscussionData: NewDiscussionInput,
