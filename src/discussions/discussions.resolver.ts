@@ -26,7 +26,7 @@ export class DiscussionsResolver {
   ): Promise<Discussion[]> {
     const discussions = await this.discussionsService.findByTableRow(table_name, row);
     if (!discussions) {
-      throw new NotFoundException(`Discussion not found by table#${table_name}, row#${row}`);
+      return [];
     }
     return discussions;
   }

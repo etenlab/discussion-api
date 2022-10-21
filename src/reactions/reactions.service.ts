@@ -32,9 +32,17 @@ export class ReactionsService {
   async findById(id: number): Promise<Reaction> {
     const reaction = await this.reactionRepository.findOneOrFail({ where: { id } });
     if (!reaction) {
-      throw new NotFoundException("You cannot update what you don't own...");
+      throw new NotFoundException("Not found");
     }
     return reaction;
+  }
+
+  async findByPost(postId: number): Promise<Reaction[]> {
+    const reactions = await this.reactionRepository.find({ where: { post: postId } });
+    if (!reactions) {
+      throw new NotFoundException("Not found");
+    }
+    return reactions;
   }
 
   async remove(id: number): Promise<boolean> {

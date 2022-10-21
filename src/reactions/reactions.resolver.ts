@@ -20,6 +20,15 @@ export class ReactionsResolver {
     return reaction;
   }
 
+  @Query(returns => [Reaction])
+  async reactions(@Args('post') postId: number): Promise<Reaction[]> {
+    const reactions = await this.reactionsService.findByPost(postId);
+    if (!reactions) {
+      return [];
+    }
+    return reactions;
+  }
+
   @Mutation(returns => Reaction)
   async createReaction(
     @Args('data') data: NewReactionInput,
