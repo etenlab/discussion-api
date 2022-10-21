@@ -9,6 +9,14 @@ export class Discussion {
   id: number;
 
   @Column()
+  @Field(type => Int, {nullable: false})
+  app: number;
+
+  @Column()
+  @Field(type => Int, {nullable: false})
+  org: number;
+
+  @Column()
   @Field({ nullable: false })
   table_name: string;
 
