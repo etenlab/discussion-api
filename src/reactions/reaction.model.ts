@@ -9,10 +9,14 @@ export class Reaction {
   id: number;
 
   @Column()
+  @Field(type => Int, { nullable: false })
+  post: number;
+
+  @Column()
   @Field(type => String, { nullable: false })
   user_id: string;
 
   @Column()
-  @Field(type => Int, { nullable: false })
-  content: number;
+  @Field(type => String, { nullable: false })
+  content: string;
 }
