@@ -38,7 +38,7 @@ export class ReactionsService {
   }
 
   async findByPost(postId: number): Promise<Reaction[]> {
-    const reactions = await this.reactionRepository.find({ where: { post: postId } });
+    const reactions = await this.reactionRepository.find({ where: { post_id: postId } });
     if (!reactions) {
       throw new NotFoundException("Not found");
     }

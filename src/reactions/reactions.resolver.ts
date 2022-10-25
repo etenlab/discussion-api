@@ -1,14 +1,16 @@
 import { NotFoundException } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver, Subscription, Int } from '@nestjs/graphql';
-import { Discussion } from 'src/discussions/discussion.model';
+import { Args, Mutation, Query, Resolver, Subscription, Int, ResolveField, Parent } from '@nestjs/graphql';
 import { Reaction } from './reaction.model';
 import { ReactionsService } from './reactions.service';
 import { NewReactionInput } from './new-reaction.input';
+import { Post } from 'src/posts/post.model';
+import { PostsService } from 'src/posts/posts.service';
 
 @Resolver(of => Reaction)
 export class ReactionsResolver {
   constructor(
     private readonly reactionsService: ReactionsService,
+    private readonly postsService: PostsService
   ) {}
 
   @Query(returns => Reaction)
@@ -50,5 +52,11 @@ export class ReactionsResolver {
   @Mutation(returns => Boolean)
   async removeReaction(@Args('id') id: number) {
     return this.reactionsService.remove(id);
+  }
+
+  @ResolveField('post', () => Post)
+  async getPost(@Parent() reaction: Reaction) {
+    const post = await this.postsService.findPostById(reaction.post_id);
+    return post;
   }
 }
