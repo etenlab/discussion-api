@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { NewPostInput } from './new-post.input';
-import { Discussion } from 'src/discussions/discussion.model';
 import { Post } from './post.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,7 +8,7 @@ import { Repository } from 'typeorm';
 export class PostsService {
   constructor(
     @InjectRepository(Post)
-    private postRepository: Repository<Post>,
+    private postRepository: Repository<Post>
   ) {}
 
   async create(data: NewPostInput): Promise<Post> {
@@ -65,7 +64,6 @@ export class PostsService {
     const post = await this.postRepository.findOneOrFail({ where: { id } });
     if (!post) {
       throw new NotFoundException(`Post #${id} not found`);
-      return false;
     }
     await this.postRepository.remove(post);
     return true;

@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
+import { Discussion } from 'src/discussions/discussion.model';
 
 @Entity()
 @ObjectType()
@@ -8,8 +9,12 @@ export class Post {
   @Field(type => Int)
   id: number;
 
+  @Field()
+  @ManyToOne(type => Discussion, (discussion) => discussion.id)
+  @JoinColumn({name: 'discussion_id'})
+  discussion: Discussion;
+
   @Column()
-  @Field(type => Int)
   discussion_id: number;
 
   @Column()
