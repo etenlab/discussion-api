@@ -2,18 +2,18 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class NewPostInput {
-  @Field(type => Int)
+  @Field(() => Int)
   discussion_id: number;
 
-  @Field(type => String, { nullable: false })
+  @Field(() => String, { nullable: false })
   user_id: string;
 
-  @Field(type => String)
+  @Field(() => String)
   quill_text: string;
 
-  @Field(type => String)
+  @Field(() => String)
   plain_text: string;
 
-  @Field(type => String, { nullable: false, defaultValue: 'simple' })
+  @Field(() => String, { nullable: false, defaultValue: 'simple' })
   postgres_language: string;
 }

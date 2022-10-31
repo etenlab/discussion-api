@@ -7,7 +7,10 @@ import { Post } from './post.model';
 import { Discussion } from 'src/discussions/discussion.model';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post]), TypeOrmModule.forFeature([Discussion])],
+  imports: [
+    TypeOrmModule.forFeature([Post]),
+    TypeOrmModule.forFeature([Discussion]),
+  ],
   providers: [PostsResolver, PostsService, DiscussionsService],
 })
 export class PostsModule {}

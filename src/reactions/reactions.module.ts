@@ -7,7 +7,10 @@ import { Post } from 'src/posts/post.model';
 import { PostsService } from 'src/posts/posts.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reaction]), TypeOrmModule.forFeature([Post])],
+  imports: [
+    TypeOrmModule.forFeature([Reaction]),
+    TypeOrmModule.forFeature([Post]),
+  ],
   providers: [ReactionsResolver, ReactionsService, PostsService],
 })
 export class ReactionsModule {}

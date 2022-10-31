@@ -17,23 +17,34 @@ export class DiscussionsService {
   }
 
   async findOneById(discussionId: number): Promise<Discussion> {
-    const discussion = this.discussionRepository.findOne({ where: { id: discussionId } });
+    const discussion = this.discussionRepository.findOne({
+      where: { id: discussionId },
+    });
     if (!discussion) {
       throw new NotFoundException(`Discussion #${discussionId} not found`);
     }
     return discussion;
   }
 
-  async findByTableRow(tableName: string, rowId: number): Promise<Discussion[]> {
-    const discussions = this.discussionRepository.find({ where: { table_name: tableName, row: rowId } });
+  async findByTableRow(
+    tableName: string,
+    rowId: number,
+  ): Promise<Discussion[]> {
+    const discussions = this.discussionRepository.find({
+      where: { table_name: tableName, row: rowId },
+    });
     if (!discussions) {
-      throw new NotFoundException(`Discussion not found by table#${tableName}, row#${rowId}`);
+      throw new NotFoundException(
+        `Discussion not found by table#${tableName}, row#${rowId}`,
+      );
     }
     return discussions;
   }
 
   async remove(discussionId: number): Promise<boolean> {
-    const discussion = await this.discussionRepository.findOne({ where: { id: discussionId } });
+    const discussion = await this.discussionRepository.findOne({
+      where: { id: discussionId },
+    });
     if (!discussion) {
       throw new NotFoundException(`Discussion #${discussionId} not found`);
     }

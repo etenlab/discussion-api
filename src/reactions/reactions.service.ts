@@ -16,12 +16,10 @@ export class ReactionsService {
     return await this.reactionRepository.save(reaction);
   }
 
-  async update(
-    id: number,
-    data: any,
-    user_id: string
-  ): Promise<Reaction> {
-    const reaction = await this.reactionRepository.findOneOrFail({ where: { id } });
+  async update(id: number, data: any, user_id: string): Promise<Reaction> {
+    const reaction = await this.reactionRepository.findOneOrFail({
+      where: { id },
+    });
     if (reaction && reaction.user_id === user_id) {
       await this.reactionRepository.update({ id }, data);
       return this.reactionRepository.findOneOrFail({ where: { id } });
@@ -30,23 +28,29 @@ export class ReactionsService {
   }
 
   async findById(id: number): Promise<Reaction> {
-    const reaction = await this.reactionRepository.findOneOrFail({ where: { id } });
+    const reaction = await this.reactionRepository.findOneOrFail({
+      where: { id },
+    });
     if (!reaction) {
-      throw new NotFoundException("Not found");
+      throw new NotFoundException('Not found');
     }
     return reaction;
   }
 
   async findByPost(postId: number): Promise<Reaction[]> {
-    const reactions = await this.reactionRepository.find({ where: { post_id: postId } });
+    const reactions = await this.reactionRepository.find({
+      where: { post_id: postId },
+    });
     if (!reactions) {
-      throw new NotFoundException("Not found");
+      throw new NotFoundException('Not found');
     }
     return reactions;
   }
 
   async remove(id: number): Promise<boolean> {
-    const reaction = await this.reactionRepository.findOneOrFail({ where: { id } });
+    const reaction = await this.reactionRepository.findOneOrFail({
+      where: { id },
+    });
     if (!reaction) {
       throw new NotFoundException(`Reaction #${id} not found`);
       return false;

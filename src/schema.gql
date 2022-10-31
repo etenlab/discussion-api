@@ -8,16 +8,18 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Discussion {
+  app: Int!
   id: Int!
+  org: Int!
   row: Int!
   table_name: String!
 }
 
 type Mutation {
-  addDiscussion(newDiscussionData: NewDiscussionInput!): Discussion!
+  createDiscussion(newDiscussionData: NewDiscussionInput!): Discussion!
   createPost(data: NewPostInput!): Post!
   createReaction(data: NewReactionInput!): Reaction!
-  removeDiscussion(id: Float!): Boolean!
+  deleteDiscussion(id: Int!): Boolean!
   removePost(id: Float!): Boolean!
   removePostsByDiscussionId(discussionId: Float!): Boolean!
   removeReaction(id: Float!): Boolean!
@@ -26,8 +28,10 @@ type Mutation {
 }
 
 input NewDiscussionInput {
+  app: Int
+  org: Int
   row: Int!
-  tableName: String!
+  table_name: String!
 }
 
 input NewPostInput {
@@ -39,13 +43,14 @@ input NewPostInput {
 }
 
 input NewReactionInput {
-  content: Int!
+  content: String!
+  post_id: Int!
   user_id: String!
 }
 
 type Post {
   created_at: DateTime!
-  discussion_id: Int!
+  discussion: Discussion!
   id: Int!
   plain_text: String!
   postgres_language: String!
@@ -55,13 +60,16 @@ type Post {
 
 type Query {
   discussion(id: Float!): Discussion!
+  discussions(row: Float!, table_name: String!): [Discussion!]!
   post(id: Float!): Post!
   postsByDiscussionId(discussionId: Float!): [Post!]!
   reaction(id: Float!): Reaction!
+  reactions(post: Float!): [Reaction!]!
 }
 
 type Reaction {
-  content: Int!
+  content: String!
   id: Int!
+  post: Post!
   user_id: String!
 }

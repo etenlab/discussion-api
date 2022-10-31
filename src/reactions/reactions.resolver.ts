@@ -1,19 +1,26 @@
 import { NotFoundException } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver, Subscription, Int, ResolveField, Parent } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Query,
+  Resolver,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { Reaction } from './reaction.model';
 import { ReactionsService } from './reactions.service';
 import { NewReactionInput } from './new-reaction.input';
 import { Post } from 'src/posts/post.model';
 import { PostsService } from 'src/posts/posts.service';
 
-@Resolver(of => Reaction)
+@Resolver(() => Reaction)
 export class ReactionsResolver {
   constructor(
     private readonly reactionsService: ReactionsService,
-    private readonly postsService: PostsService
+    private readonly postsService: PostsService,
   ) {}
 
-  @Query(returns => Reaction)
+  @Query(() => Reaction)
   async reaction(@Args('id') id: number): Promise<Reaction> {
     const reaction = await this.reactionsService.findById(id);
     if (!reaction) {
@@ -22,7 +29,7 @@ export class ReactionsResolver {
     return reaction;
   }
 
-  @Query(returns => [Reaction])
+  @Query(() => [Reaction])
   async reactions(@Args('post') postId: number): Promise<Reaction[]> {
     const reactions = await this.reactionsService.findByPost(postId);
     if (!reactions) {
@@ -31,7 +38,7 @@ export class ReactionsResolver {
     return reactions;
   }
 
-  @Mutation(returns => Reaction)
+  @Mutation(() => Reaction)
   async createReaction(
     @Args('data') data: NewReactionInput,
   ): Promise<Reaction> {
@@ -39,7 +46,7 @@ export class ReactionsResolver {
     return reaction;
   }
 
-  @Mutation(returns => Reaction)
+  @Mutation(() => Reaction)
   async updateReaction(
     @Args('id') id: number,
     @Args('data') data: NewReactionInput,
@@ -49,7 +56,7 @@ export class ReactionsResolver {
     return reaction;
   }
 
-  @Mutation(returns => Boolean)
+  @Mutation(() => Boolean)
   async removeReaction(@Args('id') id: number) {
     return this.reactionsService.remove(id);
   }

@@ -5,15 +5,15 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @ObjectType()
 export class Discussion {
   @PrimaryGeneratedColumn()
-  @Field(type => Int)
+  @Field(() => Int)
   id: number;
 
-  @Column()
-  @Field(type => Int, {nullable: false})
+  @Column({ default: 0 })
+  @Field(() => Int)
   app: number;
 
-  @Column()
-  @Field(type => Int, {nullable: false})
+  @Column({ default: 0 })
+  @Field(() => Int)
   org: number;
 
   @Column()
@@ -21,6 +21,6 @@ export class Discussion {
   table_name: string;
 
   @Column()
-  @Field(type => Int, { nullable: false })
+  @Field(() => Int, { nullable: false })
   row: number;
 }

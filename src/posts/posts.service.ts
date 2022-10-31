@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 export class PostsService {
   constructor(
     @InjectRepository(Post)
-    private postRepository: Repository<Post>
+    private postRepository: Repository<Post>,
   ) {}
 
   async create(data: NewPostInput): Promise<Post> {
@@ -16,11 +16,7 @@ export class PostsService {
     return await this.postRepository.save(post);
   }
 
-  async update(
-    id: number,
-    data: any,
-    user_id: string
-  ): Promise<Post> {
+  async update(id: number, data: any, user_id: string): Promise<Post> {
     const post = await this.postRepository.findOneOrFail({ where: { id } });
     if (post && post.user_id === user_id) {
       await this.postRepository.update({ id }, data);
@@ -38,23 +34,27 @@ export class PostsService {
   }
 
   async findPostsByDiscussionId(discussionId: number): Promise<Post[]> {
-    const posts = await this.postRepository.find({ 
+    const posts = await this.postRepository.find({
       where: { discussion_id: discussionId },
-      order: { id: "ASC" },
+      order: { id: 'ASC' },
     });
     if (!posts) {
-      throw new NotFoundException(`Posts of discussion #${discussionId} not found`);
+      throw new NotFoundException(
+        `Posts of discussion #${discussionId} not found`,
+      );
     }
     return posts;
   }
 
   async removePostsByDiscussionId(discussionId: number): Promise<boolean> {
-    const posts = await this.postRepository.find({ 
+    const posts = await this.postRepository.find({
       where: { discussion_id: discussionId },
-      order: { id: "ASC" },
+      order: { id: 'ASC' },
     });
     if (!posts) {
-      throw new NotFoundException(`Posts of discussion #${discussionId} not found`);
+      throw new NotFoundException(
+        `Posts of discussion #${discussionId} not found`,
+      );
     }
     await this.postRepository.remove(posts);
     return true;

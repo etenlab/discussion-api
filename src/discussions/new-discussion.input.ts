@@ -1,16 +1,15 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsOptional, Length, MaxLength } from 'class-validator';
 
 @InputType()
 export class NewDiscussionInput {
-  @Field(() => Int, { nullable: false })
+  @Field(() => Int, { nullable: true })
   app: number;
 
-  @Field(() => Int, { nullable: false })
+  @Field(() => Int, { nullable: true })
   org: number;
 
   @Field({ nullable: false })
-  tableName: string;
+  table_name: string;
 
   @Field(() => Int, { nullable: false })
   row: number;

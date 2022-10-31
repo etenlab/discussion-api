@@ -1,19 +1,26 @@
 import { NotFoundException } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver, Parent, ResolveField } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Query,
+  Resolver,
+  Parent,
+  ResolveField,
+} from '@nestjs/graphql';
 import { Discussion } from 'src/discussions/discussion.model';
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
 import { DiscussionsService } from 'src/discussions/discussions.service';
 import { NewPostInput } from './new-post.input';
 
-@Resolver(of => Post)
+@Resolver(() => Post)
 export class PostsResolver {
   constructor(
     private readonly postsService: PostsService,
     private readonly discussionsService: DiscussionsService,
   ) {}
 
-  @Query(returns => Post)
+  @Query(() => Post)
   async post(@Args('id') id: number): Promise<Post> {
     const post = await this.postsService.findPostById(id);
     if (!post) {
@@ -22,8 +29,10 @@ export class PostsResolver {
     return post;
   }
 
-  @Query(returns => [Post])
-  async postsByDiscussionId(@Args('discussionId') discussionId: number): Promise<Post[]> {
+  @Query(() => [Post])
+  async postsByDiscussionId(
+    @Args('discussionId') discussionId: number,
+  ): Promise<Post[]> {
     const posts = await this.postsService.findPostsByDiscussionId(discussionId);
     if (!posts) {
       throw new NotFoundException(discussionId);
@@ -31,15 +40,13 @@ export class PostsResolver {
     return posts;
   }
 
-  @Mutation(returns => Post)
-  async createPost(
-    @Args('data') data: NewPostInput,
-  ): Promise<Post> {
+  @Mutation(() => Post)
+  async createPost(@Args('data') data: NewPostInput): Promise<Post> {
     const post = await this.postsService.create(data);
     return post;
   }
 
-  @Mutation(returns => Post)
+  @Mutation(() => Post)
   async updatePost(
     @Args('id') id: number,
     @Args('data') data: NewPostInput,
@@ -49,19 +56,21 @@ export class PostsResolver {
     return post;
   }
 
-  @Mutation(returns => Boolean)
+  @Mutation(() => Boolean)
   async removePost(@Args('id') id: number) {
     return this.postsService.removePostById(id);
   }
 
-  @Mutation(returns => Boolean)
+  @Mutation(() => Boolean)
   async removePostsByDiscussionId(@Args('discussionId') discussionId: number) {
     return this.postsService.removePostsByDiscussionId(discussionId);
   }
 
   @ResolveField('discussion', () => Discussion)
   async getDiscussion(@Parent() post: Post) {
-    const discussion = await this.discussionsService.findOneById(post.discussion_id);
+    const discussion = await this.discussionsService.findOneById(
+      post.discussion_id,
+    );
     return discussion;
   }
 }
