@@ -48,16 +48,6 @@ export class ReactionsService {
   }
 
   async delete(id: number): Promise<boolean> {
-    // const reaction = await this.reactionRepository.findOneOrFail({
-    //   where: { id },
-    // });
-    // if (!reaction) {
-    //   throw new NotFoundException(`Reaction #${id} not found`);
-    //   return false;
-    // }
-    // await this.reactionRepository.remove(reaction);
-    // return true;
-
     await this.reactionRepository.delete({ id });
     return true;
   }

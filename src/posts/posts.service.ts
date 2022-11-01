@@ -52,13 +52,6 @@ export class PostsService {
   }
 
   async delete(id: number): Promise<boolean> {
-    // const post = await this.postRepository.findOneOrFail({ where: { id } });
-    // if (!post) {
-    //   throw new NotFoundException(`Post #${id} not found`);
-    // }
-    // console.log(post);
-    // await this.postRepository.remove(post);
-    // return true;
     await this.postRepository.delete({ id });
     return true;
   }
