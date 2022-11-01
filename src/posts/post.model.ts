@@ -5,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { Discussion } from 'src/discussions/discussion.model';
 
@@ -16,7 +17,10 @@ export class Post {
   id: number;
 
   @Field()
-  @ManyToOne(() => Discussion, (discussion) => discussion.id)
+  @ManyToOne(() => Discussion, (discussion) => discussion.id, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'discussion_id' })
   discussion: Discussion;
 
@@ -39,7 +43,7 @@ export class Post {
   @Field(() => String, { nullable: false, defaultValue: 'simple' })
   postgres_language: string;
 
-  @Column()
+  @CreateDateColumn()
   @Field(() => Date)
   created_at: Date;
 }
