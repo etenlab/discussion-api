@@ -1,6 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import {
   Args,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -31,18 +32,20 @@ export class PostsResolver {
 
   @Query(() => [Post])
   async postsByDiscussionId(
-    @Args('discussionId') discussionId: number,
+    @Args('discussionId', { type: () => Int }) discussionId: number,
   ): Promise<Post[]> {
     const posts = await this.postsService.findPostsByDiscussionId(discussionId);
     if (!posts) {
-      throw new NotFoundException(discussionId);
+      return [];
     }
     return posts;
   }
 
   @Mutation(() => Post)
-  async createPost(@Args('data') data: NewPostInput): Promise<Post> {
-    const post = await this.postsService.create(data);
+  async createPost(
+    @Args('newPostData') newPostData: NewPostInput,
+  ): Promise<Post> {
+    const post = await this.postsService.create(newPostData);
     return post;
   }
 
@@ -57,13 +60,15 @@ export class PostsResolver {
   }
 
   @Mutation(() => Boolean)
-  async removePost(@Args('id') id: number) {
-    return this.postsService.removePostById(id);
+  async deletePost(@Args('id', { type: () => Int }) id: number) {
+    return this.postsService.delete(id);
   }
 
   @Mutation(() => Boolean)
-  async removePostsByDiscussionId(@Args('discussionId') discussionId: number) {
-    return this.postsService.removePostsByDiscussionId(discussionId);
+  async deletePostsByDiscussionId(
+    @Args('discussionId', { type: () => Int }) discussionId: number,
+  ) {
+    return this.postsService.deletePostsByDiscussionId(discussionId);
   }
 
   @ResolveField('discussion', () => Discussion)

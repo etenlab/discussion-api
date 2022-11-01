@@ -1,5 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import {
+  Int,
   Args,
   Mutation,
   Query,
@@ -30,8 +31,10 @@ export class ReactionsResolver {
   }
 
   @Query(() => [Reaction])
-  async reactions(@Args('post') postId: number): Promise<Reaction[]> {
-    const reactions = await this.reactionsService.findByPost(postId);
+  async reactionsByPostId(
+    @Args('postId', { type: () => Int }) postId: number,
+  ): Promise<Reaction[]> {
+    const reactions = await this.reactionsService.findReactionsByPostId(postId);
     if (!reactions) {
       return [];
     }
@@ -40,9 +43,9 @@ export class ReactionsResolver {
 
   @Mutation(() => Reaction)
   async createReaction(
-    @Args('data') data: NewReactionInput,
+    @Args('newReactionData') newReactionData: NewReactionInput,
   ): Promise<Reaction> {
-    const reaction = await this.reactionsService.create(data);
+    const reaction = await this.reactionsService.create(newReactionData);
     return reaction;
   }
 
@@ -57,8 +60,8 @@ export class ReactionsResolver {
   }
 
   @Mutation(() => Boolean)
-  async removeReaction(@Args('id') id: number) {
-    return this.reactionsService.remove(id);
+  async deleteReaction(@Args('id', { type: () => Int }) id: number) {
+    return this.reactionsService.delete(id);
   }
 
   @ResolveField('post', () => Post)

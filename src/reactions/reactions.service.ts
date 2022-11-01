@@ -37,7 +37,7 @@ export class ReactionsService {
     return reaction;
   }
 
-  async findByPost(postId: number): Promise<Reaction[]> {
+  async findReactionsByPostId(postId: number): Promise<Reaction[]> {
     const reactions = await this.reactionRepository.find({
       where: { post_id: postId },
     });
@@ -47,15 +47,18 @@ export class ReactionsService {
     return reactions;
   }
 
-  async remove(id: number): Promise<boolean> {
-    const reaction = await this.reactionRepository.findOneOrFail({
-      where: { id },
-    });
-    if (!reaction) {
-      throw new NotFoundException(`Reaction #${id} not found`);
-      return false;
-    }
-    await this.reactionRepository.remove(reaction);
+  async delete(id: number): Promise<boolean> {
+    // const reaction = await this.reactionRepository.findOneOrFail({
+    //   where: { id },
+    // });
+    // if (!reaction) {
+    //   throw new NotFoundException(`Reaction #${id} not found`);
+    //   return false;
+    // }
+    // await this.reactionRepository.remove(reaction);
+    // return true;
+
+    await this.reactionRepository.delete({ id });
     return true;
   }
 }

@@ -9,7 +9,9 @@ export class DiscussionsResolver {
   constructor(private readonly discussionsService: DiscussionsService) {}
 
   @Query(() => Discussion)
-  async discussion(@Args('id') id: number): Promise<Discussion> {
+  async discussion(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<Discussion> {
     const discussion = await this.discussionsService.findOneById(id);
     if (!discussion) {
       throw new NotFoundException(id);
@@ -20,9 +22,9 @@ export class DiscussionsResolver {
   @Query(() => [Discussion])
   async discussions(
     @Args('table_name') table_name: string,
-    @Args('row') row: number,
+    @Args('row', { type: () => Int }) row: number,
   ): Promise<Discussion[]> {
-    const discussions = await this.discussionsService.findByTableRow(
+    const discussions = await this.discussionsService.findByTableNameAndRow(
       table_name,
       row,
     );
@@ -42,6 +44,6 @@ export class DiscussionsResolver {
 
   @Mutation(() => Boolean)
   async deleteDiscussion(@Args('id', { type: () => Int }) id: number) {
-    return this.discussionsService.remove(id);
+    return this.discussionsService.delete(id);
   }
 }

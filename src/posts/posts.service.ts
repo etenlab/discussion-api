@@ -36,7 +36,7 @@ export class PostsService {
   async findPostsByDiscussionId(discussionId: number): Promise<Post[]> {
     const posts = await this.postRepository.find({
       where: { discussion_id: discussionId },
-      order: { id: 'ASC' },
+      order: { created_at: 'ASC' },
     });
     if (!posts) {
       throw new NotFoundException(
@@ -46,26 +46,20 @@ export class PostsService {
     return posts;
   }
 
-  async removePostsByDiscussionId(discussionId: number): Promise<boolean> {
-    const posts = await this.postRepository.find({
-      where: { discussion_id: discussionId },
-      order: { id: 'ASC' },
-    });
-    if (!posts) {
-      throw new NotFoundException(
-        `Posts of discussion #${discussionId} not found`,
-      );
-    }
-    await this.postRepository.remove(posts);
+  async deletePostsByDiscussionId(discussionId: number): Promise<boolean> {
+    await this.postRepository.delete({ discussion_id: discussionId });
     return true;
   }
 
-  async removePostById(id: number): Promise<boolean> {
-    const post = await this.postRepository.findOneOrFail({ where: { id } });
-    if (!post) {
-      throw new NotFoundException(`Post #${id} not found`);
-    }
-    await this.postRepository.remove(post);
+  async delete(id: number): Promise<boolean> {
+    // const post = await this.postRepository.findOneOrFail({ where: { id } });
+    // if (!post) {
+    //   throw new NotFoundException(`Post #${id} not found`);
+    // }
+    // console.log(post);
+    // await this.postRepository.remove(post);
+    // return true;
+    await this.postRepository.delete({ id });
     return true;
   }
 }
