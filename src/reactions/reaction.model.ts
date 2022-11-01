@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Post } from 'src/posts/post.model';
 
-@Entity()
+@Entity(`reactions`)
 @ObjectType()
 export class Reaction {
   @PrimaryGeneratedColumn()

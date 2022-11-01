@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Discussion } from 'src/discussions/discussion.model';
 
-@Entity()
+@Entity(`posts`)
 @ObjectType()
 export class Post {
   @PrimaryGeneratedColumn()
