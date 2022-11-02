@@ -1,13 +1,15 @@
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, Injectable, Inject } from '@nestjs/common';
 import {
   Args,
   Int,
+  Subscription,
   Mutation,
   Query,
   Resolver,
   Parent,
   ResolveField,
 } from '@nestjs/graphql';
+import { PubSub } from 'graphql-subscriptions';
 import { Discussion } from 'src/discussions/discussion.model';
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
@@ -15,10 +17,12 @@ import { DiscussionsService } from 'src/discussions/discussions.service';
 import { NewPostInput } from './new-post.input';
 
 @Resolver(() => Post)
+@Injectable()
 export class PostsResolver {
   constructor(
     private readonly postsService: PostsService,
     private readonly discussionsService: DiscussionsService,
+    @Inject('PUB_SUB') private readonly pubSub: PubSub,
   ) {}
 
   @Query(() => Post)
@@ -45,7 +49,9 @@ export class PostsResolver {
   async createPost(
     @Args('newPostData') newPostData: NewPostInput,
   ): Promise<Post> {
-    const post = await this.postsService.create(newPostData);
+    const { id } = await this.postsService.create(newPostData);
+    const post = await this.postsService.findPostById(id);
+    this.pubSub.publish('postAdded', { postAdded: post });
     return post;
   }
 
@@ -61,7 +67,11 @@ export class PostsResolver {
 
   @Mutation(() => Boolean)
   async deletePost(@Args('id', { type: () => Int }) id: number) {
-    return this.postsService.delete(id);
+    const isDeleted = await this.postsService.delete(id);
+    if (isDeleted) {
+      this.pubSub.publish('postDeleted', { postDeleted: id });
+    }
+    return isDeleted;
   }
 
   @Mutation(() => Boolean)
@@ -69,6 +79,16 @@ export class PostsResolver {
     @Args('discussionId', { type: () => Int }) discussionId: number,
   ) {
     return this.postsService.deletePostsByDiscussionId(discussionId);
+  }
+
+  @Subscription(() => Post)
+  async postAdded() {
+    return this.pubSub.asyncIterator('postAdded');
+  }
+
+  @Subscription(() => Int)
+  async postDeleted() {
+    return this.pubSub.asyncIterator('postDeleted');
   }
 
   @ResolveField('discussion', () => Discussion)

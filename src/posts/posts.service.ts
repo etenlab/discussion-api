@@ -26,7 +26,10 @@ export class PostsService {
   }
 
   async findPostById(id: number): Promise<Post> {
-    const post = await this.postRepository.findOneOrFail({ where: { id } });
+    const post = await this.postRepository.findOneOrFail({
+      relations: ['reactions'],
+      where: { id },
+    });
     if (!post) {
       throw new NotFoundException("You cannot update what you don't own...");
     }
@@ -35,6 +38,9 @@ export class PostsService {
 
   async findPostsByDiscussionId(discussionId: number): Promise<Post[]> {
     const posts = await this.postRepository.find({
+      relations: {
+        reactions: true,
+      },
       where: { discussion_id: discussionId },
       order: { created_at: 'ASC' },
     });
