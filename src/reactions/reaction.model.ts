@@ -15,7 +15,7 @@ export class Reaction {
   @Field(() => Int)
   id: number;
 
-  @Field()
+  @Field(() => Post)
   @ManyToOne(() => Post, (post) => post.id, {
     nullable: false,
     onDelete: 'CASCADE',
@@ -27,10 +27,10 @@ export class Reaction {
   post_id: number;
 
   @Column()
-  @Field(() => String, { nullable: false })
+  @Field(() => String)
   user_id: string;
 
   @Column()
-  @Field(() => String, { nullable: false })
+  @Field(() => String)
   content: string;
 }

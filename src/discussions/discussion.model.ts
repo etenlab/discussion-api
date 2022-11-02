@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Post } from 'src/posts/post.model';
 
 @Entity(`discussions`)
 @ObjectType()
@@ -17,10 +18,14 @@ export class Discussion {
   org: number;
 
   @Column()
-  @Field({ nullable: false })
+  @Field()
   table_name: string;
 
   @Column()
-  @Field(() => Int, { nullable: false })
+  @Field(() => Int)
   row: number;
+
+  @Field(() => [Post], { nullable: 'items' })
+  @OneToMany(() => Post, (post) => post.discussion)
+  posts: Post[];
 }

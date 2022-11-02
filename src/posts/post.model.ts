@@ -6,8 +6,10 @@ import {
   PrimaryGeneratedColumn,
   JoinColumn,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Discussion } from 'src/discussions/discussion.model';
+import { Reaction } from 'src/reactions/reaction.model';
 
 @Entity(`posts`)
 @ObjectType()
@@ -16,13 +18,17 @@ export class Post {
   @Field(() => Int)
   id: number;
 
-  @Field()
+  @Field(() => Discussion)
   @ManyToOne(() => Discussion, (discussion) => discussion.id, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'discussion_id' })
   discussion: Discussion;
+
+  @Field(() => [Reaction], { nullable: 'items' })
+  @OneToMany(() => Reaction, (reaction) => reaction.post)
+  reactions: Reaction[];
 
   @Column()
   discussion_id: number;
