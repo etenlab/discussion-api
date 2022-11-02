@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DiscussionsModule } from './discussions/discussions.module';
 import { PostsModule } from './posts/posts.module';
 import { ReactionsModule } from './reactions/reactions.module';
+import { PubSubModule } from './pubSub.module';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -19,6 +20,9 @@ dotenv.config();
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      subscriptions: {
+        'graphql-ws': true,
+      },
     }),
     TypeOrmModule.forRoot({
       keepConnectionAlive: true,
@@ -31,6 +35,7 @@ dotenv.config();
       autoLoadEntities: true,
       synchronize: true,
     }),
+    PubSubModule,
     DiscussionsModule,
     PostsModule,
     ReactionsModule,
