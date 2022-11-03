@@ -9,12 +9,13 @@ import {
   Parent,
   ResolveField,
 } from '@nestjs/graphql';
-import { PubSub } from 'graphql-subscriptions';
 import { Discussion } from 'src/discussions/discussion.model';
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
 import { DiscussionsService } from 'src/discussions/discussions.service';
 import { NewPostInput } from './new-post.input';
+import { PubSub } from 'graphql-subscriptions';
+import { PUB_SUB } from 'src/pubSub.module';
 
 @Resolver(() => Post)
 @Injectable()
@@ -22,7 +23,7 @@ export class PostsResolver {
   constructor(
     private readonly postsService: PostsService,
     private readonly discussionsService: DiscussionsService,
-    @Inject('PUB_SUB') private readonly pubSub: PubSub,
+    @Inject(PUB_SUB) private readonly pubSub: PubSub,
   ) {}
 
   @Query(() => Post)
@@ -51,8 +52,16 @@ export class PostsResolver {
   ): Promise<Post> {
     const { id } = await this.postsService.create(newPostData);
     const post = await this.postsService.findPostById(id);
-    this.pubSub.publish('postAdded', { postAdded: post });
+    if (!post) {
+      throw new NotFoundException(id);
+    }
+    this.pubSub.publish('postCreated', { postCreated: post });
     return post;
+  }
+
+  @Subscription(() => Post)
+  async postCreated() {
+    return this.pubSub.asyncIterator('postCreated');
   }
 
   @Mutation(() => Post)
@@ -74,21 +83,16 @@ export class PostsResolver {
     return isDeleted;
   }
 
+  @Subscription(() => Int)
+  async postDeleted() {
+    return this.pubSub.asyncIterator('postDeleted');
+  }
+
   @Mutation(() => Boolean)
   async deletePostsByDiscussionId(
     @Args('discussionId', { type: () => Int }) discussionId: number,
   ) {
     return this.postsService.deletePostsByDiscussionId(discussionId);
-  }
-
-  @Subscription(() => Post)
-  async postAdded() {
-    return this.pubSub.asyncIterator('postAdded');
-  }
-
-  @Subscription(() => Int)
-  async postDeleted() {
-    return this.pubSub.asyncIterator('postDeleted');
   }
 
   @ResolveField('discussion', () => Discussion)
