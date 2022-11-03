@@ -18,6 +18,7 @@ export class DiscussionsService {
 
   async findOneById(discussionId: number): Promise<Discussion> {
     const discussion = this.discussionRepository.findOne({
+      relations: ['posts', 'posts.reactions'],
       where: { id: discussionId },
     });
     if (!discussion) {

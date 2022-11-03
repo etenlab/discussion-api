@@ -1,12 +1,25 @@
-import { NotFoundException } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver, Int } from '@nestjs/graphql';
+import { NotFoundException, Injectable, Inject } from '@nestjs/common';
+import {
+  Args,
+  Subscription,
+  Mutation,
+  Query,
+  Resolver,
+  Int,
+} from '@nestjs/graphql';
+import { PubSub } from 'graphql-subscriptions';
+import { PUB_SUB } from 'src/pubSub.module';
 import { Discussion } from './discussion.model';
 import { DiscussionsService } from './discussions.service';
 import { NewDiscussionInput } from './new-discussion.input';
 
 @Resolver(() => Discussion)
+@Injectable()
 export class DiscussionsResolver {
-  constructor(private readonly discussionsService: DiscussionsService) {}
+  constructor(
+    private readonly discussionsService: DiscussionsService,
+    @Inject(PUB_SUB) private readonly pubSub: PubSub,
+  ) {}
 
   @Query(() => Discussion)
   async discussion(
@@ -38,8 +51,18 @@ export class DiscussionsResolver {
   async createDiscussion(
     @Args('newDiscussionData') newDiscussionData: NewDiscussionInput,
   ): Promise<Discussion> {
-    const discussion = await this.discussionsService.create(newDiscussionData);
+    const { id } = await this.discussionsService.create(newDiscussionData);
+    const discussion = await this.discussionsService.findOneById(id);
+    if (!discussion) {
+      throw new NotFoundException(id);
+    }
+    this.pubSub.publish('discussionCreated', { discussionCreated: discussion });
     return discussion;
+  }
+
+  @Subscription(() => Discussion)
+  async discussionCreated() {
+    return this.pubSub.asyncIterator('discussionCreated');
   }
 
   @Mutation(() => Boolean)

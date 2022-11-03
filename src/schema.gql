@@ -11,18 +11,19 @@ type Discussion {
   app: Int!
   id: Int!
   org: Int!
+  posts: [Post]!
   row: Int!
   table_name: String!
 }
 
 type Mutation {
   createDiscussion(newDiscussionData: NewDiscussionInput!): Discussion!
-  createPost(data: NewPostInput!): Post!
-  createReaction(data: NewReactionInput!): Reaction!
+  createPost(newPostData: NewPostInput!): Post!
+  createReaction(newReactionData: NewReactionInput!): Reaction!
   deleteDiscussion(id: Int!): Boolean!
-  removePost(id: Float!): Boolean!
-  removePostsByDiscussionId(discussionId: Float!): Boolean!
-  removeReaction(id: Float!): Boolean!
+  deletePost(id: Int!): Boolean!
+  deletePostsByDiscussionId(discussionId: Int!): Boolean!
+  deleteReaction(id: Int!): Boolean!
   updatePost(data: NewPostInput!, id: Float!, userId: String!): Post!
   updateReaction(data: NewReactionInput!, id: Float!, userId: String!): Reaction!
 }
@@ -55,16 +56,17 @@ type Post {
   plain_text: String!
   postgres_language: String!
   quill_text: String!
+  reactions: [Reaction]!
   user_id: String!
 }
 
 type Query {
-  discussion(id: Float!): Discussion!
-  discussions(row: Float!, table_name: String!): [Discussion!]!
+  discussion(id: Int!): Discussion!
+  discussions(row: Int!, table_name: String!): [Discussion!]!
   post(id: Float!): Post!
-  postsByDiscussionId(discussionId: Float!): [Post!]!
+  postsByDiscussionId(discussionId: Int!): [Post!]!
   reaction(id: Float!): Reaction!
-  reactions(post: Float!): [Reaction!]!
+  reactionsByPostId(postId: Int!): [Reaction!]!
 }
 
 type Reaction {
@@ -72,4 +74,12 @@ type Reaction {
   id: Int!
   post: Post!
   user_id: String!
+}
+
+type Subscription {
+  discussionCreated: Discussion!
+  postCreated: Post!
+  postDeleted: Int!
+  reactionCreated: Reaction!
+  reactionDeleted: Int!
 }
