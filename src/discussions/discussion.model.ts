@@ -2,7 +2,9 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Post } from 'src/posts/post.model';
 
-@Entity(`discussions`)
+@Entity(`discussions`, {
+  schema: 'admin',
+})
 @ObjectType()
 export class Discussion {
   @PrimaryGeneratedColumn()

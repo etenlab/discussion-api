@@ -8,7 +8,9 @@ import {
 } from 'typeorm';
 import { Post } from 'src/posts/post.model';
 
-@Entity(`reactions`)
+@Entity(`reactions`, {
+  schema: `admin`,
+})
 @ObjectType()
 export class Reaction {
   @PrimaryGeneratedColumn()

@@ -11,7 +11,9 @@ import {
 import { Discussion } from 'src/discussions/discussion.model';
 import { Reaction } from 'src/reactions/reaction.model';
 
-@Entity(`posts`)
+@Entity(`posts`, {
+  schema: `admin`,
+})
 @ObjectType()
 export class Post {
   @PrimaryGeneratedColumn()
