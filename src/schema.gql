@@ -20,12 +20,13 @@ type Mutation {
   createDiscussion(newDiscussionData: NewDiscussionInput!): Discussion!
   createPost(newPostData: NewPostInput!): Post!
   createReaction(newReactionData: NewReactionInput!): Reaction!
+  createUser(email: String!): User!
   deleteDiscussion(id: Int!): Boolean!
   deletePost(id: Int!): Boolean!
   deletePostsByDiscussionId(discussionId: Int!): Boolean!
   deleteReaction(id: Int!): Boolean!
-  updatePost(data: NewPostInput!, id: Float!, userId: String!): Post!
-  updateReaction(data: NewReactionInput!, id: Float!, userId: String!): Reaction!
+  updatePost(data: NewPostInput!, id: Float!, userId: Float!): Post!
+  updateReaction(data: NewReactionInput!, id: Float!, userId: Float!): Reaction!
 }
 
 input NewDiscussionInput {
@@ -40,13 +41,13 @@ input NewPostInput {
   plain_text: String!
   postgres_language: String = "simple"
   quill_text: String!
-  user_id: String!
+  user_id: Int!
 }
 
 input NewReactionInput {
   content: String!
   post_id: Int!
-  user_id: String!
+  user_id: Int!
 }
 
 type Post {
@@ -57,7 +58,7 @@ type Post {
   postgres_language: String!
   quill_text: String!
   reactions: [Reaction]!
-  user_id: String!
+  user_id: Int!
 }
 
 type Query {
@@ -73,7 +74,7 @@ type Reaction {
   content: String!
   id: Int!
   post: Post!
-  user_id: String!
+  user_id: Int!
 }
 
 type Subscription {
@@ -82,4 +83,13 @@ type Subscription {
   postDeleted: Int!
   reactionCreated: Reaction!
   reactionDeleted: Int!
+}
+
+type User {
+  active: Boolean!
+  created_at: DateTime!
+  email: String!
+  is_email_verified: Boolean!
+  password: String!
+  user_id: Int!
 }
