@@ -79,7 +79,7 @@ type Reaction {
 
 type Subscription {
   discussionCreated: Discussion!
-  postCreated: Post!
+  postCreated(discussionId: Int!): Post!
   postDeleted: Int!
   reactionCreated: Reaction!
   reactionDeleted: Int!

@@ -59,8 +59,14 @@ export class PostsResolver {
     return post;
   }
 
-  @Subscription(() => Post)
-  async postCreated() {
+  @Subscription(() => Post, {
+    name: 'postCreated',
+    filter: (payload, variables) =>
+      payload.postCreated.discussion_id === variables.discussionId,
+  })
+  async subscribePostCreated(
+    @Args('discussionId', { type: () => Int }) _discussionId: number,
+  ) {
     return this.pubSub.asyncIterator('postCreated');
   }
 
@@ -83,8 +89,10 @@ export class PostsResolver {
     return isDeleted;
   }
 
-  @Subscription(() => Int)
-  async postDeleted() {
+  @Subscription(() => Int, {
+    name: 'postDeleted',
+  })
+  async subscribePostDeleted() {
     return this.pubSub.asyncIterator('postDeleted');
   }
 
