@@ -75,8 +75,11 @@ export class ReactionsResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteReaction(@Args('id', { type: () => Int }) id: number) {
-    const isDeleted = await this.reactionsService.delete(id);
+  async deleteReaction(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('userId', { type: () => Int }) userId: number,
+  ) {
+    const isDeleted = await this.reactionsService.delete(id, userId);
     if (isDeleted) {
       this.pubSub.publish('reactionDeleted', { reactionDeleted: id });
     }

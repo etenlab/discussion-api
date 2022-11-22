@@ -22,9 +22,9 @@ type Mutation {
   createReaction(newReactionData: NewReactionInput!): Reaction!
   createUser(email: String!): User!
   deleteDiscussion(id: Int!): Boolean!
-  deletePost(id: Int!): Boolean!
+  deletePost(id: Int!, userId: Int!): Boolean!
   deletePostsByDiscussionId(discussionId: Int!): Boolean!
-  deleteReaction(id: Int!): Boolean!
+  deleteReaction(id: Int!, userId: Int!): Boolean!
   updatePost(data: NewPostInput!, id: Float!, userId: Float!): Post!
   updateReaction(data: NewReactionInput!, id: Float!, userId: Float!): Reaction!
 }

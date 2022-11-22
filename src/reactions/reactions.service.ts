@@ -47,8 +47,19 @@ export class ReactionsService {
     return reactions;
   }
 
-  async delete(id: number): Promise<boolean> {
-    await this.reactionRepository.delete({ id });
+  async delete(id: number, userId: number): Promise<boolean> {
+    const reaction = await this.reactionRepository.findOne({
+      where: {
+        id,
+        user_id: userId,
+      },
+    });
+
+    if (!reaction) {
+      return false;
+    }
+
+    await this.reactionRepository.delete(id);
     return true;
   }
 }

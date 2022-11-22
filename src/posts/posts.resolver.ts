@@ -81,8 +81,11 @@ export class PostsResolver {
   }
 
   @Mutation(() => Boolean)
-  async deletePost(@Args('id', { type: () => Int }) id: number) {
-    const isDeleted = await this.postsService.delete(id);
+  async deletePost(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('userId', { type: () => Int }) userId: number,
+  ) {
+    const isDeleted = await this.postsService.delete(id, userId);
     if (isDeleted) {
       this.pubSub.publish('postDeleted', { postDeleted: id });
     }

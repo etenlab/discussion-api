@@ -57,8 +57,19 @@ export class PostsService {
     return true;
   }
 
-  async delete(id: number): Promise<boolean> {
-    await this.postRepository.delete({ id });
+  async delete(id: number, userId: number): Promise<boolean> {
+    const post = await this.postRepository.findOne({
+      where: {
+        id,
+        user_id: userId,
+      },
+    });
+
+    if (!post) {
+      return false;
+    }
+
+    await this.postRepository.delete(id);
     return true;
   }
 }
