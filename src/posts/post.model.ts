@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 import { Discussion } from 'src/discussions/discussion.model';
 import { Reaction } from 'src/reactions/reaction.model';
+import { File } from './file.model';
+import { RelationshipPostFile } from './relationship-post-file.model';
 
 @Entity(`posts`, {
   schema: `admin`,
@@ -31,6 +33,13 @@ export class Post {
   @Field(() => [Reaction], { nullable: 'items' })
   @OneToMany(() => Reaction, (reaction) => reaction.post)
   reactions: Reaction[];
+
+  @Field(() => [RelationshipPostFile], { nullable: 'items' })
+  @OneToMany(
+    () => RelationshipPostFile,
+    (relationshipPostFile) => relationshipPostFile.post,
+  )
+  files: RelationshipPostFile[];
 
   @Column()
   discussion_id: number;
