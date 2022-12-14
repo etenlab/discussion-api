@@ -8,7 +8,7 @@ import {
   Int,
 } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
-import { PUB_SUB } from 'src/pubSub.module';
+import { PUB_SUB } from '../pubSub.module';
 import { Discussion } from './discussion.model';
 import { DiscussionsService } from './discussions.service';
 import { NewDiscussionInput } from './new-discussion.input';
@@ -16,6 +16,7 @@ import { NewDiscussionInput } from './new-discussion.input';
 @Resolver(() => Discussion)
 @Injectable()
 export class DiscussionsResolver {
+  static discussion: any;
   constructor(
     private readonly discussionsService: DiscussionsService,
     @Inject(PUB_SUB) private readonly pubSub: PubSub,

@@ -28,6 +28,7 @@ export class ReactionsResolver {
 
   @Query(() => Reaction)
   async reaction(@Args('id') id: number): Promise<Reaction> {
+    console.log('test');
     const reaction = await this.reactionsService.findById(id);
     if (!reaction) {
       throw new NotFoundException(id);
