@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 import {
   Column,
   Entity,
@@ -10,10 +10,13 @@ import {
 import { File } from './file.model';
 import { Post } from './post.model';
 
-@Entity(`relationship_post_file`)
+@Entity(`relationship_post_file`, {
+  schema: `admin`,
+})
 @ObjectType()
 export class RelationshipPostFile {
   @PrimaryGeneratedColumn()
+  @Field(() => Int)
   id: number;
 
   @Column()
@@ -26,6 +29,7 @@ export class RelationshipPostFile {
   @Column()
   file_id: number;
 
+  @Field(() => File)
   @OneToOne(() => File, (file) => file.id)
   @JoinColumn({
     name: 'file_id',
