@@ -49,8 +49,9 @@ export class PostsResolver {
   @Mutation(() => Post)
   async createPost(
     @Args('newPostData') newPostData: NewPostInput,
+    @Args('files', { type: () => [Int], nullable: 'items' }) files: number[],
   ): Promise<Post> {
-    const { id } = await this.postsService.create(newPostData);
+    const { id } = await this.postsService.create(newPostData, files);
     const post = await this.postsService.findPostById(id);
     if (!post) {
       throw new NotFoundException(id);

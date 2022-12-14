@@ -32,7 +32,7 @@ export class DiscussionsService {
     row: number,
   ): Promise<Discussion[]> {
     const discussions = this.discussionRepository.find({
-      relations: ['posts', 'posts.reactions'],
+      relations: ['posts', 'posts.reactions', 'posts.files'],
       where: { table_name, row },
     });
     if (!discussions) {

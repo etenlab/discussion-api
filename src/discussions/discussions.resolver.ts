@@ -44,6 +44,8 @@ export class DiscussionsResolver {
     if (!discussions) {
       return [];
     }
+    console.log('calling');
+    console.log(JSON.stringify(discussions, null, 2));
     return discussions;
   }
 

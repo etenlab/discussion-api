@@ -16,9 +16,15 @@ type Discussion {
   table_name: String!
 }
 
+type File {
+  filename: String!
+  id: Int!
+  url: String!
+}
+
 type Mutation {
   createDiscussion(newDiscussionData: NewDiscussionInput!): Discussion!
-  createPost(newPostData: NewPostInput!): Post!
+  createPost(files: [Int]!, newPostData: NewPostInput!): Post!
   createReaction(newReactionData: NewReactionInput!): Reaction!
   createUser(email: String!): User!
   deleteDiscussion(id: Int!): Boolean!
@@ -53,6 +59,7 @@ input NewReactionInput {
 type Post {
   created_at: DateTime!
   discussion: Discussion!
+  files: [RelationshipPostFile]!
   id: Int!
   plain_text: String!
   postgres_language: String!
@@ -75,6 +82,11 @@ type Reaction {
   id: Int!
   post: Post!
   user_id: Int!
+}
+
+type RelationshipPostFile {
+  file: File!
+  id: Int!
 }
 
 type Subscription {

@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import { Discussion } from 'src/discussions/discussion.model';
 import { Reaction } from 'src/reactions/reaction.model';
-import { File } from './file.model';
 import { RelationshipPostFile } from './relationship-post-file.model';
 
 @Entity(`posts`, {
