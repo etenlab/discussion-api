@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { NewDiscussionInput } from './new-discussion.input';
 import { Discussion } from './discussion.model';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,13 +17,29 @@ export class DiscussionsService {
   ) {}
 
   async create(data: NewDiscussionInput): Promise<Discussion> {
+    const discussions = await this.discussionRepository.find({
+      where: { table_name: data.table_name, row: data.row },
+    });
+
+    if (discussions.length > 0) {
+      throw new HttpException(
+        `Already exists Discussion table_name="${data.table_name}" row="${data.row}"`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const discussion = this.discussionRepository.create(data);
     return await this.discussionRepository.save(discussion);
   }
 
   async findOneById(discussionId: number): Promise<Discussion> {
     const discussion = this.discussionRepository.findOne({
-      relations: ['posts', 'posts.reactions'],
+      relations: [
+        'posts',
+        'posts.reactions',
+        'posts.files',
+        'posts.files.file',
+      ],
       where: { id: discussionId },
     });
     if (!discussion) {
@@ -32,7 +53,12 @@ export class DiscussionsService {
     row: number,
   ): Promise<Discussion[]> {
     const discussions = this.discussionRepository.find({
-      relations: ['posts', 'posts.reactions', 'posts.files'],
+      relations: [
+        'posts',
+        'posts.reactions',
+        'posts.files',
+        'posts.files.file',
+      ],
       where: { table_name, row },
     });
     if (!discussions) {
