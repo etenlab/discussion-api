@@ -17,18 +17,15 @@ export class PostsService {
   async create(data: NewPostInput, files: number[]): Promise<Post> {
     const post = this.postRepository.create(data);
     const savedPost = await this.postRepository.save(post);
-
-    if (savedPost) {
+    if (!savedPost) {
       throw new NotFoundException(savedPost.id);
     }
-
     await this.relationshipPostFileRepository.insert(
       files.map((file_id) => ({
         file_id,
         post_id: savedPost.id,
       })),
     );
-
     return savedPost;
   }
 
@@ -43,20 +40,18 @@ export class PostsService {
 
   async findPostById(id: number): Promise<Post> {
     const post = await this.postRepository.findOneOrFail({
-      relations: ['reactions'],
+      relations: ['reactions', 'files', 'files.file'],
       where: { id },
     });
     if (!post) {
-      throw new NotFoundException("You cannot update what you don't own...");
+      throw new NotFoundException(`Cannot find post id="${id}"`);
     }
     return post;
   }
 
   async findPostsByDiscussionId(discussionId: number): Promise<Post[]> {
     const posts = await this.postRepository.find({
-      relations: {
-        reactions: true,
-      },
+      relations: ['reactions', 'files', 'files.file'],
       where: { discussion_id: discussionId },
       order: { created_at: 'ASC' },
     });

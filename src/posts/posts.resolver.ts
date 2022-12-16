@@ -1,8 +1,7 @@
-import { NotFoundException, Injectable, Inject } from '@nestjs/common';
+import { NotFoundException, Injectable } from '@nestjs/common';
 import {
   Args,
   Int,
-  Subscription,
   Mutation,
   Query,
   Resolver,
@@ -14,8 +13,6 @@ import { Post } from './post.model';
 import { PostsService } from './posts.service';
 import { DiscussionsService } from 'src/discussions/discussions.service';
 import { NewPostInput } from './new-post.input';
-import { PubSub } from 'graphql-subscriptions';
-import { PUB_SUB } from 'src/pubSub.module';
 
 @Resolver(() => Post)
 @Injectable()
@@ -23,7 +20,6 @@ export class PostsResolver {
   constructor(
     private readonly postsService: PostsService,
     private readonly discussionsService: DiscussionsService,
-    @Inject(PUB_SUB) private readonly pubSub: PubSub,
   ) {}
 
   @Query(() => Post)
@@ -56,19 +52,7 @@ export class PostsResolver {
     if (!post) {
       throw new NotFoundException(id);
     }
-    this.pubSub.publish('postCreated', { postCreated: post });
     return post;
-  }
-
-  @Subscription(() => Post, {
-    name: 'postCreated',
-    filter: (payload, variables) =>
-      payload.postCreated.discussion_id === variables.discussionId,
-  })
-  async subscribePostCreated(
-    @Args('discussionId', { type: () => Int }) _discussionId: number,
-  ) {
-    return this.pubSub.asyncIterator('postCreated');
   }
 
   @Mutation(() => Post)
@@ -87,17 +71,7 @@ export class PostsResolver {
     @Args('userId', { type: () => Int }) userId: number,
   ) {
     const isDeleted = await this.postsService.delete(id, userId);
-    if (isDeleted) {
-      this.pubSub.publish('postDeleted', { postDeleted: id });
-    }
     return isDeleted;
-  }
-
-  @Subscription(() => Int, {
-    name: 'postDeleted',
-  })
-  async subscribePostDeleted() {
-    return this.pubSub.asyncIterator('postDeleted');
   }
 
   @Mutation(() => Boolean)
