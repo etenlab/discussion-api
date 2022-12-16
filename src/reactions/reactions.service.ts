@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NewReactionInput } from './new-reaction.input';
-import { Reaction } from './reaction.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { NewReactionInput } from './new-reaction.input';
+import { Reaction } from './reaction.model';
 
 @Injectable()
 export class ReactionsService {

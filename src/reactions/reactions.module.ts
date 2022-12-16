@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReactionsResolver } from './reactions.resolver';
 import { ReactionsService } from './reactions.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Reaction } from './reaction.model';
-import { Post } from 'src/posts/post.model';
-import { PostsService } from 'src/posts/posts.service';
-import { RelationshipPostFile } from 'src/posts/relationship-post-file.model';
+
+import { PostsModule } from 'src/posts/posts.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reaction, Post, RelationshipPostFile])],
-  providers: [ReactionsResolver, ReactionsService, PostsService],
+  imports: [TypeOrmModule.forFeature([Reaction]), PostsModule],
+  providers: [ReactionsResolver, ReactionsService],
 })
 export class ReactionsModule {}

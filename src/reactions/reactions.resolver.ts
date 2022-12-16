@@ -1,8 +1,7 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   Int,
   Args,
-  Subscription,
   Mutation,
   Query,
   Resolver,
@@ -14,8 +13,6 @@ import { ReactionsService } from './reactions.service';
 import { NewReactionInput } from './new-reaction.input';
 import { Post } from 'src/posts/post.model';
 import { PostsService } from 'src/posts/posts.service';
-import { PubSub } from 'graphql-subscriptions';
-import { PUB_SUB } from 'src/pubSub.module';
 
 @Resolver(() => Reaction)
 @Injectable()
@@ -23,7 +20,6 @@ export class ReactionsResolver {
   constructor(
     private readonly reactionsService: ReactionsService,
     private readonly postsService: PostsService,
-    @Inject(PUB_SUB) private readonly pubSub: PubSub,
   ) {}
 
   @Query(() => Reaction)
@@ -56,13 +52,7 @@ export class ReactionsResolver {
     if (!reaction) {
       throw new NotFoundException(id);
     }
-    this.pubSub.publish('reactionCreated', { reactionCreated: reaction });
     return reaction;
-  }
-
-  @Subscription(() => Reaction)
-  async reactionCreated() {
-    return this.pubSub.asyncIterator('reactionCreated');
   }
 
   @Mutation(() => Reaction)
@@ -81,15 +71,7 @@ export class ReactionsResolver {
     @Args('userId', { type: () => Int }) userId: number,
   ) {
     const isDeleted = await this.reactionsService.delete(id, userId);
-    if (isDeleted) {
-      this.pubSub.publish('reactionDeleted', { reactionDeleted: id });
-    }
     return isDeleted;
-  }
-
-  @Subscription(() => Int)
-  async reactionDeleted() {
-    return this.pubSub.asyncIterator('reactionDeleted');
   }
 
   @ResolveField('post', () => Post)
