@@ -17,7 +17,6 @@ export class Reaction {
   @Field(() => Int)
   id: number;
 
-  @Field(() => Post)
   @ManyToOne(() => Post, (post) => post.id, {
     nullable: false,
     onDelete: 'CASCADE',
@@ -25,6 +24,7 @@ export class Reaction {
   @JoinColumn({ name: 'post_id' })
   post: Post;
 
+  @Field(() => Int)
   @Column()
   post_id: number;
 
