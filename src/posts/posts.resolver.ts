@@ -80,12 +80,4 @@ export class PostsResolver {
   ) {
     return this.postsService.deletePostsByDiscussionId(discussionId);
   }
-
-  @ResolveField('discussion', () => Discussion)
-  async getDiscussion(@Parent() post: Post) {
-    const discussion = await this.discussionsService.findOneById(
-      post.discussion_id,
-    );
-    return discussion;
-  }
 }

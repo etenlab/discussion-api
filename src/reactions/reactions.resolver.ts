@@ -49,9 +49,11 @@ export class ReactionsResolver {
   ): Promise<Reaction> {
     const { id } = await this.reactionsService.create(newReactionData);
     const reaction = await this.reactionsService.findById(id);
+
     if (!reaction) {
       throw new NotFoundException(id);
     }
+
     return reaction;
   }
 
@@ -72,11 +74,5 @@ export class ReactionsResolver {
   ) {
     const isDeleted = await this.reactionsService.delete(id, userId);
     return isDeleted;
-  }
-
-  @ResolveField('post', () => Post)
-  async getPost(@Parent() reaction: Reaction) {
-    const post = await this.postsService.findPostById(reaction.post_id);
-    return post;
   }
 }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NewReactionInput } from './new-reaction.input';
@@ -12,8 +16,20 @@ export class ReactionsService {
   ) {}
 
   async create(data: NewReactionInput): Promise<Reaction> {
-    const reaction = this.reactionRepository.create(data);
-    return await this.reactionRepository.save(reaction);
+    const reaction = await this.reactionRepository.findOne({
+      where: {
+        user_id: data.user_id,
+        post_id: data.post_id,
+        content: data.content,
+      },
+    });
+
+    if (reaction) {
+      throw new ConflictException('Already Exists')!;
+    }
+
+    const newReaction = this.reactionRepository.create(data);
+    return await this.reactionRepository.save(newReaction);
   }
 
   async update(id: number, data: any, user_id: number): Promise<Reaction> {
