@@ -1,14 +1,9 @@
-import { NotFoundException, Injectable } from '@nestjs/common';
 import {
-  Args,
-  Int,
-  Mutation,
-  Query,
-  Resolver,
-  Parent,
-  ResolveField,
-} from '@nestjs/graphql';
-import { Discussion } from 'src/discussions/discussion.model';
+  NotFoundException,
+  Injectable,
+  ConflictException,
+} from '@nestjs/common';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
 import { DiscussionsService } from 'src/discussions/discussions.service';
@@ -57,11 +52,21 @@ export class PostsResolver {
 
   @Mutation(() => Post)
   async updatePost(
-    @Args('id') id: number,
+    @Args('id', { type: () => Int }) id: number,
     @Args('data') data: NewPostInput,
-    @Args('userId') userId: number,
   ): Promise<Post> {
-    const post = await this.postsService.update(id, data, userId);
+    const success = await this.postsService.update(id, data);
+
+    if (!success) {
+      throw new ConflictException(id);
+    }
+
+    const post = await this.postsService.findPostById(id);
+
+    if (!post) {
+      throw new NotFoundException(id);
+    }
+
     return post;
   }
 

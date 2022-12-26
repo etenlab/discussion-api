@@ -37,9 +37,11 @@ type Discussion {
 }
 
 type File {
-  filename: String!
+  file_name: String!
+  file_size: Int!
+  file_type: String!
+  file_url: String!
   id: Int!
-  url: String!
 }
 
 type Mutation {
@@ -51,7 +53,7 @@ type Mutation {
   deletePost(id: Int!, userId: Int!): Boolean!
   deletePostsByDiscussionId(discussionId: Int!): Boolean!
   deleteReaction(id: Int!, userId: Int!): Boolean!
-  updatePost(data: NewPostInput!, id: Float!, userId: Float!): Post!
+  updatePost(data: NewPostInput!, id: Int!): Post!
   updateReaction(data: NewReactionInput!, id: Float!, userId: Float!): Reaction!
 }
 

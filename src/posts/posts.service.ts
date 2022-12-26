@@ -29,13 +29,14 @@ export class PostsService {
     return savedPost;
   }
 
-  async update(id: number, data: any, user_id: number): Promise<Post> {
+  async update(id: number, data: NewPostInput): Promise<boolean> {
     const post = await this.postRepository.findOneOrFail({ where: { id } });
-    if (post && post.user_id === user_id) {
+    if (post) {
       await this.postRepository.update({ id }, data);
-      return this.postRepository.findOneOrFail({ where: { id } });
+      return true;
     }
     throw new NotFoundException("You cannot update what you don't own...");
+    return false;
   }
 
   async findPostById(id: number): Promise<Post> {
