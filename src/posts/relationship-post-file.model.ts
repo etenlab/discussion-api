@@ -19,6 +19,7 @@ export class RelationshipPostFile {
   @Field(() => Int)
   id: number;
 
+  @Field(() => Int)
   @Column()
   post_id: number;
 
@@ -33,7 +34,10 @@ export class RelationshipPostFile {
   file_id: number;
 
   @Field(() => File)
-  @OneToOne(() => File, (file) => file.id)
+  @OneToOne(() => File, (file) => file.id, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
     name: 'file_id',
   })

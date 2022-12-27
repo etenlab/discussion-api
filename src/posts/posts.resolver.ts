@@ -50,6 +50,14 @@ export class PostsResolver {
     return post;
   }
 
+  @Mutation(() => Boolean)
+  async deleteAttachment(
+    @Args('attachmentId', { type: () => Int }) attachmentId: number,
+    @Args('post_id', { type: () => Int }) post_id: number,
+  ) {
+    return await this.postsService.deleteAttachmentById(attachmentId, post_id);
+  }
+
   @Mutation(() => Post)
   async updatePost(
     @Args('id', { type: () => Int }) id: number,

@@ -59,6 +59,11 @@ export class DiscussionsService {
         'posts.files',
         'posts.files.file',
       ],
+      order: {
+        posts: {
+          created_at: 'ASC',
+        },
+      },
       where: { table_name, row },
     });
     if (!discussions) {

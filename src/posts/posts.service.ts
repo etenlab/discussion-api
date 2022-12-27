@@ -64,6 +64,25 @@ export class PostsService {
     return posts;
   }
 
+  async deleteAttachmentById(
+    attachmentId: number,
+    post_id: number,
+  ): Promise<boolean> {
+    await this.relationshipPostFileRepository.delete(attachmentId);
+
+    const post = await this.findPostById(post_id);
+
+    if (
+      post.plain_text.trim() === '' &&
+      post.quill_text === '' &&
+      post.files.length === 0
+    ) {
+      await this.delete(post_id, post.user_id);
+    }
+
+    return true;
+  }
+
   async deletePostsByDiscussionId(discussionId: number): Promise<boolean> {
     await this.postRepository.delete({ discussion_id: discussionId });
     return true;
