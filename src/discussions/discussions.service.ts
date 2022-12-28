@@ -36,7 +36,9 @@ export class DiscussionsService {
     const discussion = this.discussionRepository.findOne({
       relations: [
         'posts',
+        'posts.user',
         'posts.reactions',
+        'posts.reactions.user',
         'posts.files',
         'posts.files.file',
       ],
@@ -55,7 +57,9 @@ export class DiscussionsService {
     const discussions = this.discussionRepository.find({
       relations: [
         'posts',
+        'posts.user',
         'posts.reactions',
+        'posts.reactions.user',
         'posts.files',
         'posts.files.file',
       ],

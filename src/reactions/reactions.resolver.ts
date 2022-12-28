@@ -1,17 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  Int,
-  Args,
-  Mutation,
-  Query,
-  Resolver,
-  ResolveField,
-  Parent,
-} from '@nestjs/graphql';
+import { Int, Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Reaction } from './reaction.model';
 import { ReactionsService } from './reactions.service';
 import { NewReactionInput } from './new-reaction.input';
-import { Post } from 'src/posts/post.model';
 import { PostsService } from 'src/posts/posts.service';
 
 @Resolver(() => Reaction)
@@ -24,7 +15,6 @@ export class ReactionsResolver {
 
   @Query(() => Reaction)
   async reaction(@Args('id') id: number): Promise<Reaction> {
-    console.log('test');
     const reaction = await this.reactionsService.findById(id);
     if (!reaction) {
       throw new NotFoundException(id);
@@ -47,12 +37,19 @@ export class ReactionsResolver {
   async createReaction(
     @Args('newReactionData') newReactionData: NewReactionInput,
   ): Promise<Reaction> {
+    console.log(JSON.stringify(newReactionData, null, 2));
+
     const { id } = await this.reactionsService.create(newReactionData);
+
+    console.log(id);
+
     const reaction = await this.reactionsService.findById(id);
 
     if (!reaction) {
       throw new NotFoundException(id);
     }
+
+    console.log(JSON.stringify(reaction, null, 2));
 
     return reaction;
   }

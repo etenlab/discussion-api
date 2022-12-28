@@ -3,14 +3,15 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   JoinColumn,
   CreateDateColumn,
-  OneToMany,
 } from 'typeorm';
 import { Discussion } from 'src/discussions/discussion.model';
 import { Reaction } from 'src/reactions/reaction.model';
 import { RelationshipPostFile } from './relationship-post-file.model';
+import { User } from 'src/users/user.model';
 
 @Entity(`posts`, {
   schema: `admin`,
@@ -47,6 +48,16 @@ export class Post {
   @Column()
   @Field(() => Int)
   user_id: number;
+
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.user_id, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({
+    name: 'user_id',
+  })
+  user: User;
 
   @Column()
   @Field(() => String)

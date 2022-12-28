@@ -24,12 +24,15 @@ export class User {
   @Field(() => String)
   email: string;
 
+  @Column({ unique: true })
+  @Field(() => String)
+  username: string;
+
   @Column({ default: false })
   @Field(() => Boolean)
   is_email_verified: boolean;
 
   @Column()
-  @Field(() => String)
   password: string;
 
   @CreateDateColumn()

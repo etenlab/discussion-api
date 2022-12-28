@@ -25,10 +25,12 @@ export class ReactionsService {
     });
 
     if (reaction) {
-      throw new ConflictException('Already Exists')!;
+      throw new ConflictException('Already Exists!');
     }
 
     const newReaction = this.reactionRepository.create(data);
+
+    console.log(newReaction);
     return await this.reactionRepository.save(newReaction);
   }
 
@@ -44,7 +46,8 @@ export class ReactionsService {
   }
 
   async findById(id: number): Promise<Reaction> {
-    const reaction = await this.reactionRepository.findOneOrFail({
+    const reaction = await this.reactionRepository.findOne({
+      relations: ['user'],
       where: { id },
     });
     if (!reaction) {
