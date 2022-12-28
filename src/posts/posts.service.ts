@@ -21,7 +21,6 @@ export class PostsService {
   async create(data: NewPostInput, files: number[]): Promise<Post> {
     const post = this.postRepository.create(data);
     const savedPost = await this.postRepository.save(post);
-    console.log(savedPost);
     if (!savedPost) {
       throw new NotFoundException(savedPost.id);
     }
@@ -39,16 +38,25 @@ export class PostsService {
     if (!post) {
       throw new NotFoundException(id);
     }
-    if (post.user_id === data.user_id) {
+    if (post.user_id !== data.user_id) {
       throw new UnauthorizedException(data.user_id);
     }
-    await this.postRepository.update({ id }, data);
+    await this.postRepository.update({ id }, { ...data, is_edited: true });
     return true;
   }
 
   async findPostById(id: number): Promise<Post> {
     const post = await this.postRepository.findOneOrFail({
-      relations: ['reactions', 'reactions.user', 'user', 'files', 'files.file'],
+      relations: [
+        'files',
+        'files.file',
+        'reply',
+        'reply.user',
+        'reply.files',
+        'user',
+        'reactions',
+        'reactions.user',
+      ],
       where: { id },
     });
     if (!post) {
@@ -59,7 +67,16 @@ export class PostsService {
 
   async findPostsByDiscussionId(discussionId: number): Promise<Post[]> {
     const posts = await this.postRepository.find({
-      relations: ['reactions', 'reactions.user', 'user', 'files', 'files.file'],
+      relations: [
+        'files',
+        'files.file',
+        'reply',
+        'reply.user',
+        'reply.files',
+        'user',
+        'reactions',
+        'reactions.user',
+      ],
       where: { discussion_id: discussionId },
       order: { created_at: 'ASC' },
     });

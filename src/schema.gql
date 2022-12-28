@@ -70,6 +70,7 @@ input NewPostInput {
   plain_text: String!
   postgres_language: String = "simple"
   quill_text: String!
+  reply_id: Int
   user_id: Int!
 }
 
@@ -84,10 +85,13 @@ type Post {
   discussion_id: Int!
   files: [RelationshipPostFile]!
   id: Int!
+  is_edited: Boolean!
   plain_text: String!
   postgres_language: String!
   quill_text: String!
   reactions: [Reaction]!
+  reply: Post
+  reply_id: Int
   user: User!
   user_id: Int!
 }

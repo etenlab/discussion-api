@@ -16,4 +16,7 @@ export class NewPostInput {
 
   @Field(() => String, { nullable: false, defaultValue: 'simple' })
   postgres_language: string;
+
+  @Field(() => Int, { nullable: true })
+  reply_id: number;
 }

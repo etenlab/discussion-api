@@ -37,6 +37,9 @@ export class DiscussionsService {
       relations: [
         'posts',
         'posts.user',
+        'posts.reply',
+        'posts.reply.user',
+        'posts.reply.files',
         'posts.reactions',
         'posts.reactions.user',
         'posts.files',
@@ -58,6 +61,9 @@ export class DiscussionsService {
       relations: [
         'posts',
         'posts.user',
+        'posts.reply',
+        'posts.reply.user',
+        'posts.reply.files',
         'posts.reactions',
         'posts.reactions.user',
         'posts.files',

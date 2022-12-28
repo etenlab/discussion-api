@@ -71,6 +71,24 @@ export class Post {
   @Field(() => String, { nullable: false, defaultValue: 'simple' })
   postgres_language: string;
 
+  @Column({ default: false })
+  @Field(() => Boolean, { defaultValue: false })
+  is_edited: boolean;
+
+  @Column({ nullable: true })
+  @Field(() => Int, { nullable: true })
+  reply_id: number;
+
+  @Field(() => Post, { nullable: true })
+  @ManyToOne(() => Post, (post) => post.id, {
+    createForeignKeyConstraints: false,
+    nullable: true,
+  })
+  @JoinColumn({
+    name: 'reply_id',
+  })
+  reply: Post;
+
   @CreateDateColumn()
   @Field(() => Date)
   created_at: Date;
