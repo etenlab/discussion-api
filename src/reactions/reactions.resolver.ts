@@ -37,19 +37,12 @@ export class ReactionsResolver {
   async createReaction(
     @Args('newReactionData') newReactionData: NewReactionInput,
   ): Promise<Reaction> {
-    console.log(JSON.stringify(newReactionData, null, 2));
-
     const { id } = await this.reactionsService.create(newReactionData);
-
-    console.log(id);
-
     const reaction = await this.reactionsService.findById(id);
 
     if (!reaction) {
       throw new NotFoundException(id);
     }
-
-    console.log(JSON.stringify(reaction, null, 2));
 
     return reaction;
   }

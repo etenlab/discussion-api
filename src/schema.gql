@@ -99,6 +99,8 @@ type Post {
 type Query {
   discussion(id: Int!): Discussion!
   discussions(row: Int!, table_name: String!): [Discussion!]!
+  getUserIdFromEmail(email: String!): User!
+  getUserIdFromName(name: String!): User!
   post(id: Float!): Post!
   postsByDiscussionId(discussionId: Int!): [Post!]!
   reaction(id: Float!): Reaction!

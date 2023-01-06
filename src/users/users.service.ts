@@ -1,4 +1,8 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from './user.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -27,5 +31,33 @@ export class UsersService {
       password: 'password',
     });
     return await this.userRepository.save(user);
+  }
+
+  async getUserFromEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Cannot find a user has email#${email}!`);
+    }
+
+    return user;
+  }
+
+  async getUserFromName(name: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: {
+        username: name,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Cannot find a user has name#${name}!`);
+    }
+
+    return user;
   }
 }

@@ -30,7 +30,6 @@ export class ReactionsService {
 
     const newReaction = this.reactionRepository.create(data);
 
-    console.log(newReaction);
     return await this.reactionRepository.save(newReaction);
   }
 

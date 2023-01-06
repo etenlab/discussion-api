@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { NewDiscussionInput } from './new-discussion.input';
 import { Discussion } from './discussion.model';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,19 +12,16 @@ export class DiscussionsService {
   ) {}
 
   async create(data: NewDiscussionInput): Promise<Discussion> {
-    const discussions = await this.discussionRepository.find({
+    const discussion = await this.discussionRepository.findOne({
       where: { table_name: data.table_name, row: data.row },
     });
 
-    if (discussions.length > 0) {
-      throw new HttpException(
-        `Already exists Discussion table_name="${data.table_name}" row="${data.row}"`,
-        HttpStatus.CONFLICT,
-      );
+    if (discussion) {
+      return discussion;
     }
 
-    const discussion = this.discussionRepository.create(data);
-    return await this.discussionRepository.save(discussion);
+    const newDiscussion = this.discussionRepository.create(data);
+    return await this.discussionRepository.save(newDiscussion);
   }
 
   async findOneById(discussionId: number): Promise<Discussion> {
