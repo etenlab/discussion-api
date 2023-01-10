@@ -3,6 +3,7 @@ import { Args, Mutation, Query, Resolver, Int } from '@nestjs/graphql';
 import { Discussion } from './discussion.model';
 import { DiscussionsService } from './discussions.service';
 import { NewDiscussionInput } from './new-discussion.input';
+import { DiscussionSummary } from './dto/DiscussionSummary';
 
 @Resolver(() => Discussion)
 @Injectable()
@@ -30,6 +31,18 @@ export class DiscussionsResolver {
       table_name,
       row,
     );
+    if (!discussions) {
+      return [];
+    }
+    return discussions;
+  }
+
+  @Query(() => [DiscussionSummary])
+  async getDiscussionsSummaryByUserId(
+    @Args('userId', { type: () => Int }) userId: number,
+  ): Promise<DiscussionSummary[]> {
+    const discussions =
+      await this.discussionsService.getDiscussionsSummaryByUserId(userId);
     if (!discussions) {
       return [];
     }

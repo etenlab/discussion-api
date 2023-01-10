@@ -1,14 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { NewDiscussionInput } from './new-discussion.input';
-import { Discussion } from './discussion.model';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
+import { Discussion } from './discussion.model';
+import { Post } from '../posts/post.model';
+import { DiscussionSummary } from './dto/DiscussionSummary';
 
 @Injectable()
 export class DiscussionsService {
   constructor(
     @InjectRepository(Discussion)
     private discussionRepository: Repository<Discussion>,
+    @InjectRepository(Post)
+    private postRepository: Repository<Post>,
   ) {}
 
   async create(data: NewDiscussionInput): Promise<Discussion> {
@@ -74,6 +78,38 @@ export class DiscussionsService {
       );
     }
     return discussions;
+  }
+
+  async getDiscussionsSummaryByUserId(
+    userId: number,
+  ): Promise<DiscussionSummary[]> {
+    const discussionIds = await this.postRepository
+      .createQueryBuilder('admin.posts')
+      .select('count(discussion_id) as total_posts, discussion_id')
+      .where('user_id = :userId', {
+        userId,
+      })
+      .groupBy('discussion_id')
+      .execute();
+
+    const discussions = await this.discussionRepository.findBy({
+      id: In([...discussionIds.map((item) => item.discussion_id)]),
+    });
+
+    // Following code will cause performance issue, should be updated.
+    // I (hiroshi) am going to use this approach because we are in v2 step.
+    return discussions.map((discussion) => {
+      const total_posts = discussionIds.find(
+        (item) => item.discussion_id === discussion.id,
+      ).total_posts;
+
+      return {
+        id: discussion.id,
+        table_name: discussion.table_name,
+        row: discussion.row,
+        total_posts,
+      } as DiscussionSummary;
+    });
   }
 
   async delete(id: number): Promise<boolean> {

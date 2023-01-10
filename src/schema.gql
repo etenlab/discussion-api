@@ -36,6 +36,13 @@ type Discussion {
   table_name: String!
 }
 
+type DiscussionSummary {
+  id: Int!
+  row: Int!
+  table_name: String!
+  total_posts: Int!
+}
+
 type File {
   file_name: String!
   file_size: Int!
@@ -99,6 +106,7 @@ type Post {
 type Query {
   discussion(id: Int!): Discussion!
   discussions(row: Int!, table_name: String!): [Discussion!]!
+  getDiscussionsSummaryByUserId(userId: Int!): [DiscussionSummary!]!
   getUserIdFromEmail(email: String!): User!
   getUserIdFromName(name: String!): User!
   post(id: Float!): Post!
