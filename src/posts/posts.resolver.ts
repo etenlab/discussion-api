@@ -6,7 +6,7 @@ import {
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
-import { DiscussionsService } from 'src/discussions/discussions.service';
+import { DiscussionsService } from '../discussions/discussions.service';
 import { NewPostInput } from './new-post.input';
 
 @Resolver(() => Post)

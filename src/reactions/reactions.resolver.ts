@@ -3,7 +3,7 @@ import { Int, Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Reaction } from './reaction.model';
 import { ReactionsService } from './reactions.service';
 import { NewReactionInput } from './new-reaction.input';
-import { PostsService } from 'src/posts/posts.service';
+import { PostsService } from '../posts/posts.service';
 
 @Resolver(() => Reaction)
 @Injectable()

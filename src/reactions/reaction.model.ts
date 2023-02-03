@@ -7,8 +7,8 @@ import {
   JoinColumn,
   Unique,
 } from 'typeorm';
-import { Post } from 'src/posts/post.model';
-import { User } from 'src/users/user.model';
+import { Post } from '../posts/post.model';
+import { User } from '../users/user.model';
 
 @Entity(`reactions`, {
   schema: `admin`,

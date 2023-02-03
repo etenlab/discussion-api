@@ -8,10 +8,10 @@ import {
   JoinColumn,
   CreateDateColumn,
 } from 'typeorm';
-import { Discussion } from 'src/discussions/discussion.model';
-import { Reaction } from 'src/reactions/reaction.model';
+import { Discussion } from '../discussions/discussion.model';
+import { Reaction } from '../reactions/reaction.model';
 import { RelationshipPostFile } from './relationship-post-file.model';
-import { User } from 'src/users/user.model';
+import { User } from '../users/user.model';
 
 @Entity(`posts`, {
   schema: `admin`,

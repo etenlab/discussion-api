@@ -4,7 +4,7 @@ import { ReactionsResolver } from './reactions.resolver';
 import { ReactionsService } from './reactions.service';
 import { Reaction } from './reaction.model';
 
-import { PostsModule } from 'src/posts/posts.module';
+import { PostsModule } from '../posts/posts.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Reaction]), PostsModule],
