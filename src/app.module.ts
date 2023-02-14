@@ -16,16 +16,7 @@ dotenv.config();
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
-      driver: ApolloFederationDriver,
-      debug: true,
-      playground: false,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      sortSchema: true,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
-    }),
     TypeOrmModule.forRoot({
-      keepConnectionAlive: true,
       type: 'postgres',
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
@@ -35,6 +26,14 @@ dotenv.config();
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
+    }),
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      debug: true,
+      playground: false,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     DiscussionsModule,
     PostsModule,
