@@ -12,20 +12,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Prepare Node 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Install Nest
-        run: npm i -g @nestjs/cli
-
-      - name: Build
-        run: nest build
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -35,6 +21,8 @@ jobs:
 
       - name: Dockerize
         run: docker build -t etenlab/discussion-api .
+        env:
+          NO_UPDATE_NOTIFIER: true
 
       - name: Log in to Docker Hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
@@ -55,6 +43,8 @@ jobs:
           push: true
           tags: etenlab/discussion-api:latest
           labels: ${{ steps.meta.outputs.labels }}
+        env:
+          NO_UPDATE_NOTIFIER: true
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

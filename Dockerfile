@@ -8,9 +8,9 @@ WORKDIR /usr/src/etenlab/discussion-api
 # where available (npm@5+)
 COPY package*.json ./
 COPY tsconfig*.json ./
-COPY src ./
+COPY . .
 
-RUN npm ci --no-update-notifier --legacy-peer-deps
+RUN npm ci --legacy-peer-deps
 RUN npm run build
 
 CMD [ "npm", "run", "start:prod" ]
