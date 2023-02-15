@@ -12,6 +12,7 @@ import { PostsModule } from './posts/posts.module';
 import { ReactionsModule } from './reactions/reactions.module';
 import { UsersModule } from './users/users.module';
 import * as dotenv from 'dotenv';
+import { AppController } from './app.controller';
 dotenv.config();
 
 @Module({
@@ -40,5 +41,6 @@ dotenv.config();
     ReactionsModule,
     UsersModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
