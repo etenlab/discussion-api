@@ -10,7 +10,7 @@ COPY package*.json ./
 COPY tsconfig*.json ./
 COPY src ./
 
-RUN npm ci
+RUN npm ci --no-update-notifier --legacy-peer-deps
 RUN npm run build
 
 CMD [ "npm", "run", "start:prod" ]
