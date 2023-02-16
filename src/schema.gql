@@ -6,11 +6,21 @@ directive @extends on INTERFACE | OBJECT
 
 directive @external on FIELD_DEFINITION | OBJECT
 
-directive @key(fields: String!) on INTERFACE | OBJECT
+directive @inaccessible on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
+
+directive @key(fields: String!, resolvable: Boolean = true) repeatable on INTERFACE | OBJECT
+
+directive @link(import: [link__Import], url: String!) on SCHEMA
+
+directive @override(from: String!) on FIELD_DEFINITION
 
 directive @provides(fields: String!) on FIELD_DEFINITION
 
 directive @requires(fields: String!) on FIELD_DEFINITION
+
+directive @shareable on FIELD_DEFINITION | OBJECT
+
+directive @tag(name: String!) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
@@ -65,7 +75,7 @@ input NewDiscussionInput {
 input NewPostInput {
   discussion_id: Int!
   plain_text: String!
-  postgres_language: String! = "simple"
+  postgres_language: String = "simple"
   quill_text: String!
   reply_id: Int
   user_id: Int!
@@ -127,3 +137,5 @@ type User {
   user_id: Int!
   username: String!
 }
+
+scalar link__Import
