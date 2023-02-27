@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NewDiscussionInput } from './new-discussion.input';
+import { DiscussionInput } from './discussion.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Discussion } from './discussion.model';
 import { Post } from '../posts/post.model';
 import { DiscussionSummary } from './dto/DiscussionSummary';
+import { AppList } from '../app-list/app-list.model';
+import { Organization } from '../organization/organizations.model';
 
 @Injectable()
 export class DiscussionsService {
@@ -13,18 +15,52 @@ export class DiscussionsService {
     private discussionRepository: Repository<Discussion>,
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
+    @InjectRepository(AppList)
+    private appListRepository: Repository<AppList>,
+    @InjectRepository(Organization)
+    private organizationRepository: Repository<Organization>,
   ) {}
 
-  async create(data: NewDiscussionInput): Promise<Discussion> {
+  async create(data: DiscussionInput): Promise<Discussion> {
+    const app = await this.appListRepository.findOne({
+      where: {
+        id: data.app_id,
+      },
+    });
+
+    if (!app) {
+      throw new NotFoundException(`Not exists app id #${data.app_id}`);
+    }
+
+    const org = await this.organizationRepository.findOne({
+      where: {
+        id: data.org_id,
+      },
+    });
+
+    if (!org) {
+      throw new NotFoundException(`Not exists app id #${data.app_id}`);
+    }
+
     const discussion = await this.discussionRepository.findOne({
-      where: { table_name: data.table_name, row: data.row },
+      where: {
+        table_name: data.table_name,
+        row: data.row,
+        app: data.app_id,
+        org: data.org_id,
+      },
     });
 
     if (discussion) {
       return discussion;
     }
 
-    const newDiscussion = this.discussionRepository.create(data);
+    const newDiscussion = this.discussionRepository.create({
+      table_name: data.table_name,
+      row: data.row,
+      app: data.app_id,
+      org: data.org_id,
+    });
     return await this.discussionRepository.save(newDiscussion);
   }
 
@@ -49,10 +85,17 @@ export class DiscussionsService {
     return discussion;
   }
 
-  async findByTableNameAndRow(
-    table_name: string,
-    row: number,
-  ): Promise<Discussion[]> {
+  async findWithParams({
+    table_name,
+    row,
+    app_id,
+    org_id,
+  }: {
+    table_name: string;
+    row: number;
+    app_id: number;
+    org_id: number;
+  }): Promise<Discussion[]> {
     const discussions = this.discussionRepository.find({
       relations: [
         'posts',
@@ -64,13 +107,20 @@ export class DiscussionsService {
         'posts.reactions.user',
         'posts.files',
         'posts.files.file',
+        'appList',
+        'organization',
       ],
       order: {
         posts: {
           created_at: 'ASC',
         },
       },
-      where: { table_name, row },
+      where: {
+        table_name: table_name,
+        row: row,
+        app: app_id,
+        org: org_id,
+      },
     });
     if (!discussions) {
       throw new NotFoundException(

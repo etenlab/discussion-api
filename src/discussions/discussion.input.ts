@@ -1,12 +1,12 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
-export class NewDiscussionInput {
-  @Field(() => Int, { nullable: true })
-  app: number;
+export class DiscussionInput {
+  @Field(() => Int, { nullable: false })
+  app_id: number;
 
-  @Field(() => Int, { nullable: true })
-  org: number;
+  @Field(() => Int, { nullable: false })
+  org_id: number;
 
   @Field({ nullable: false })
   table_name: string;

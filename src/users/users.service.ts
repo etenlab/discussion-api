@@ -40,11 +40,16 @@ export class UsersService {
       },
     });
 
-    if (!user) {
-      throw new NotFoundException(`Cannot find a user has email#${email}!`);
+    if (user) {
+      return user;
     }
 
-    return user;
+    const newUser = this.userRepository.create({
+      email,
+      username: email,
+      password: 'password',
+    });
+    return await this.userRepository.save(newUser);
   }
 
   async getUserFromName(name: string): Promise<User> {

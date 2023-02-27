@@ -11,6 +11,8 @@ import { DiscussionsModule } from './discussions/discussions.module';
 import { PostsModule } from './posts/posts.module';
 import { ReactionsModule } from './reactions/reactions.module';
 import { UsersModule } from './users/users.module';
+import { AppListModule } from './app-list/app-list.module';
+import { OrganizationsModule } from './organization/organization.module';
 import * as dotenv from 'dotenv';
 import { AppController } from './app.controller';
 dotenv.config();
@@ -40,6 +42,8 @@ dotenv.config();
     PostsModule,
     ReactionsModule,
     UsersModule,
+    AppListModule,
+    OrganizationsModule,
   ],
   controllers: [AppController],
 })
