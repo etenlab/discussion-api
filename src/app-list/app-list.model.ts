@@ -1,9 +1,10 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Directive, Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity(`app_list`, {
   schema: 'admin',
 })
+@Directive('@key(fields: "id")')
 @ObjectType()
 export class AppList {
   @PrimaryGeneratedColumn()
