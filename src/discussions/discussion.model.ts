@@ -4,7 +4,7 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  OneToOne,
+  ManyToOne,
   JoinColumn,
 } from 'typeorm';
 import { Post } from '../posts/post.model';
@@ -39,7 +39,7 @@ export class Discussion {
   posts: Post[];
 
   @Field(() => AppList)
-  @OneToOne(() => AppList, (appList) => appList.id, {
+  @ManyToOne(() => AppList, (appList) => appList.id, {
     nullable: false,
     onDelete: 'CASCADE',
   })
@@ -49,7 +49,7 @@ export class Discussion {
   appList: AppList;
 
   @Field(() => Organization)
-  @OneToOne(() => Organization, (organization) => organization.id, {
+  @ManyToOne(() => Organization, (organization) => organization.id, {
     nullable: false,
     onDelete: 'CASCADE',
   })

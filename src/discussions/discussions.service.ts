@@ -76,6 +76,8 @@ export class DiscussionsService {
         'posts.reactions.user',
         'posts.files',
         'posts.files.file',
+        'appList',
+        'organization',
       ],
       where: { id: discussionId },
     });
